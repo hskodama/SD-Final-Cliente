@@ -15,7 +15,8 @@ class Provedor:
     def menu(self):
         while True:
             print '1. Divulgar recursos'
-            print '2. Sair'
+            print '2. Pesquisar maquinas'
+            print '3. Sair'
             opc = input('')
 
             if opc == 1:
@@ -25,7 +26,18 @@ class Provedor:
                     print '\n--> Recurso divulgado com sucesso.\n'
                 else:
                     print '\n--> Erro ao divulgar recurso.\n'
-            if opc == 2:
+
+            elif opc == 2:
+                response = self.pesquisar()
+                for vms in response:
+                    print("\tID: "),
+                    print(vms['_id'])
+                    print("\tvCPU: " + vms['vcpu'])
+                    print("\tHD: " + vms['hd'])
+                    print("\tRAM: " + vms['ram'])
+                    print("\tPreco: " + vms['preco'] + "\n")
+                        
+            elif opc == 3:
                 return 0
 
     def divulgar(self):
@@ -42,6 +54,11 @@ class Provedor:
         recursos['preco'] = str(input('Preco do recurso (em R$): '))
     
         return self.postRequest(recursos, PROV_URL + 'provedor/cadastrar/' + str(pid))
+
+    def pesquisar(self):
+        pid = input('Informe o seu id: ')
+        recursos = {}
+        return self.postRequest(recursos, PROV_URL + 'provedor/search/' + str(pid))
 
     def postRequest(self, data, url):
         headers = {'Content-Type': 'application/json',}
